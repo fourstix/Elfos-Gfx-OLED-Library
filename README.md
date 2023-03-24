@@ -12,7 +12,7 @@ The programs were written to run displays from an [1802-Mini](https://github.com
 Supported Displays
 ------------------
 * SH1106 OLED display
-* *TBD: ssd1306 display*
+* SSD1306 OLED display
 
 Graphics Library API
 ---------------------
