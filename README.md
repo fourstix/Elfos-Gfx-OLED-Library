@@ -49,7 +49,7 @@ OLED SPI Library API
 <tr><td rowspan="2">oled_print_char</td><td>origin y</td><td>origin x</td><td>text style</td><td>character</td><th colspan="2">-</th></tr>
 <tr><td colspan="6">Checks origin x,y values, returns error (DF = 1) if out of bounds. Checks ASCII character value, draws DEL (127) if non-printable.<br> On return r7 points to next character cursor position (text wraps).</td></tr>
 <tr><td rowspan="2">oled_print_string</td><td>origin y</td><td> origin x</td><td>text style</td><td>-</td><td colspan="2">Pointer to null terminated ASCII string.</td></tr>
-<tr><td colspan="6">Checks origin x,y values, returns error (DF = 1) if out of bounds. Checks ASCII character value, draws DEL (127) if non-printable.<br> On return register r7 points to next character cursor position (text wraps).</td></tr>
+<tr><td colspan="6">Checks origin x,y values, returns error (DF = 1) if out of bounds. Checks ASCII character value, draws DEL (127) if non-printable.<br> On return r7 points to next character cursor position (text wraps).</td></tr>
 </table>
 
 ## Color Constants
@@ -75,7 +75,7 @@ OLED SPI Library API
 
 GFX Display Interface
 ---------------------
-The following methods are implemented in this library oled_spi.lib that is linked to the gfx library gfx.lib.  These methods are called by the GFX API methods and they encapsulate the SPI OLED specific details.  The source file gfx_display.asm contains the logic so that when e GFX display interface method is called it delegates to the appropriate SPI OLED private method.
+The following methods are implemented in this library, oled_spi.lib, and are called by methods in the gfx library gfx.lib.  These methods encapsulate the SPI OLED specific details.  The source file gfx_display.asm contains the logic so that when a GFX display interface method is called it delegates to the appropriate SPI OLED private method.
 
 ## GFX Interface Methods
 
@@ -100,7 +100,7 @@ The following methods are implemented in this library oled_spi.lib that is linke
 * ra.1 = display height 
 * ra.0 = display width
 * r9.1 = color
-* r9.0 = line length  
+* r9.0 = line length
 * r7.1 = origin y (row value, 0 to display height-1)
 * r7.0 = origin x (column value, 0 to display width-1)
 
