@@ -38,17 +38,18 @@ OLED SPI Library API
 
 
 <table>
-<tr><th rowspan="2">API Name</th><th colspan="2">R7</th><th colspan="2">R8</th><th rowspan="2" colspan="2">Notes</th></tr>
-<tr><th>R7.1</th><th>R7.0</th><th>R9.1</th><th>R9.0</th></tr>
-<tr><td>oled_check_driver</td><td colspan="2"> - </td><td colspan="2"> - </td><td colspan="2">Checks for an OLED driver in memory, returns error (DF = 1) if no driver found.</td></tr>
-<tr><td>oled_init_display</td><td colspan="2"> - </td><td colspan="2"> - </td><td colspan="2">Initialize the SPI OLED display, returns error (DF = 1) if initialization failed.</td></tr>
-<tr><td>oled_update_display</td><td colspan="2"> - </td><td colspan="2"> - </td><td colspan="2">Update the SPI OLED display with the contents of the display buffer, returns error (DF = 1) if update failed.</td></tr>
-<tr><td>oled clear_buffer</td><td colspan="2"> - </td><td colspan="2"> - </td><td colspan="2">Clears all bits in the buffer memory</td></tr>
-<tr><td>fill_buffer</td><td colspan="2"> - </td><td colspan="2"> - </td><td colspan="2">Sets all bits in the buffer memory</td></tr>
-<tr><td rowspan="2">oled_print_char</td><td>origin y</td><td>origin x</td><th colspan="2">-</th><td>background</td><td>character</td></tr>
-<tr><td colspan="6">Checks origin x,y values, returns error (DF = 1) if out of bounds.<br>Checks ASCII character value, draws DEL (127) if non-printable.<br> Return: r7 points to next character position (text wraps).</td></tr>
-<tr><td rowspan="2">oled_print_string</td><td>origin y</td><td> origin x</td><td colspan="2">r8 - Pointer to null terminated ASCII string.</td><td>background</td><td>-</td></tr>
-<tr><td colspan="6">Checks origin x,y values, returns error (DF = 1) if out of bounds. <br>Checks ASCII character value, draws DEL (127) if non-printable.<br> Return: register r7 points to next character position (text wraps) and registers r8 and r9 are consumed.</td></tr>
+<tr><th>API Name</th><th colspan="2">Inputs</th><th colspan="4">Notes</th></tr>
+<tr><td>oled_check_driver</td><td colspan="2"> (None) </td><td colspan="4">Checks for an OLED driver in memory, returns error (DF = 1) if no driver found.</td></tr>
+<tr><td>oled_init_display</td><td colspan="2"> (None) </td><td colspan="4">Initialize the SPI OLED display, returns error (DF = 1) if initialization failed.</td></tr>
+<tr><td>oled_update_display</td><td colspan="2"> (None) </td><td colspan="4">Update the SPI OLED display with the contents of the display buffer, returns error (DF = 1) if update failed.</td></tr>
+<tr><td>oled clear_buffer</td><td colspan="2"> (None) </td><td colspan="4">Clears all bits in the buffer memory</td></tr>
+<tr><td>fill_buffer</td><td colspan="2"> (None) </td><td colspan="4">Sets all bits in the buffer memory</td></tr>
+<tr><th rowspan="2">API Name</th><th>R7.1</th><th>R7.0</th><th>R9.1</th><th>R9.0</th><th colspan="2">RF</th></tr>
+<tr><th colspan="6">Notes</th></tr>
+<tr><td rowspan="2">oled_print_char</td><td>origin y</td><td>origin x</td><td>text style</td><td>character</td><th colspan="2">-</th></tr>
+<tr><td colspan="6">Checks origin x,y values, returns error (DF = 1) if out of bounds. Checks ASCII character value, draws DEL (127) if non-printable.<br> On return r7 points to next character cursor position (text wraps).</td></tr>
+<tr><td rowspan="2">oled_print_string</td><td>origin y</td><td> origin x</td><td>text style</td><td>-</td><td colspan="2">Pointer to null terminated ASCII string.</td></tr>
+<tr><td colspan="6">Checks origin x,y values, returns error (DF = 1) if out of bounds. Checks ASCII character value, draws DEL (127) if non-printable.<br> On return register r7 points to next character cursor position (text wraps).</td></tr>
 </table>
 
 ## Color Constants
