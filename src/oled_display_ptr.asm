@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------------------------
-; gfx_oled - a library for basic graphics functions useful 
+; oled_spi - a library for basic graphics functions useful 
 ; for an oled display connected to the 1802-Mini computer via 
 ; the SPI Expansion Board.  These routines operate on pixels
 ; in a buffer used by the display.
@@ -18,8 +18,9 @@
 ; SPI Expansion Board for the 1802/Mini Computer hardware
 ; Copyright 2022 by Tony Hefner 
 ;-------------------------------------------------------------------------------
-#include    include/ops.inc
-#include    include/gfx_display.inc
+#include    ../include/ops.inc
+#include    ../include/gfx_display.inc
+#include    ../include/oled_spi_def.inc
             
 ;-------------------------------------------------------
 ; Private routine - called only by the public routines
@@ -28,25 +29,30 @@
 ;-------------------------------------------------------
 
 ;-------------------------------------------------------
-; Name: gfx_display_ptr
+; Name: oled_display_ptr
 ;
-; Get a pointer to the byte in the display buffer at 
-; position x,y.
+; Get a pointer to the byte in the oled display buffer  
+; at position x,y.
 ;
-; Parameters: rf   - pointer to display buffer.
-;             r7.1 - y (line, 0 to 63)
-;             r7.0 - x (pixel offset, 0 to 127)
-;                   
-; Return: rd - pointer to byte (x,y) in display buffer
+; Parameters: 
+;   r7.1 - y (line, 0 to 63)
+;   r7.0 - x (pixel offset, 0 to 127)
+; Registers Used:
+;   rf   - pointer to display buffer.                   
+; Returns: 
+;   rd - pointer to byte (x,y) in display buffer
 ;-------------------------------------------------------
-            proc    gfx_display_ptr 
-            LOAD    rd, 0             ; clear position
+            proc    oled_display_ptr 
+            push    rf                ; save buffer ptr
+
+            load    rf, oled_display_buffer
+            load    rd, 0             ; clear position
             ghi     r7                ; get line value (0 to $3f) 
             shr                       ; shift left (page = int y/8)
             shr                        
             shr                       
             phi     rd                ; put page into high byte (rd = page * 256)
-            SHR16   rd                ; shift right, rd = page * DISP_WIDTH (128))
+            shr16   rd                ; shift right, rd = page * DISP_WIDTH (128))
             glo     r7                ; get x (byte offset)
             str     r2                ; save in M(X)
             glo     rd                ; add x to page * DISP_WIDTH (128)
@@ -66,5 +72,8 @@
             ghi     rf
             adc                       ; add rd.1 to rf.1 with carry
             phi     rd                ; rd now points to byte in buffer
-            RETURN
+            
+            pop     rf                ; restore buffer ptr
+            return
+            
             endp

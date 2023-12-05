@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------------------------
-; gfx_oled - a library for basic graphics functions useful 
+; oled_spi - a library for basic graphics functions useful 
 ; for an oled display connected to the 1802-Mini computer via 
 ; the SPI Expansion Board.  These routines operate on pixels
 ; in a buffer used by the display.
@@ -18,38 +18,41 @@
 ; SPI Expansion Board for the 1802/Mini Computer hardware
 ; Copyright 2022 by Tony Hefner 
 ;-------------------------------------------------------------------------------
-#include    include/ops.inc
-#include    include/gfx_display.inc
-
-;---------------------------------------------------------
-; Public routine - This routine clears the display buffer
-;---------------------------------------------------------
-
+#include    ../include/ops.inc
+#include    ../include/gfx_display.inc
+#include    ../include/oled_spi_def.inc
 
 ;-------------------------------------------------------
-; Name: clear_buffer
+; Public routine - This routine files the buffer with
+;   the byte $FF so that all pixels are set.
+;-------------------------------------------------------
+
+;-------------------------------------------------------
+; Name: oled_fill_buffer
 ;
-; Clear the entire display buffer.
+; Fill the entire display buffer so all pixels are set.
 ;
 ; Parameters: rf - pointer to display buffer.
 ;
 ; Return: (None)
 ;-------------------------------------------------------
-            proc    clear_buffer
-            PUSH    rf                ; save buffer ptr
-            PUSH    rc                ; save counter
-            LOAD    rc, BUFFER_SIZE   ; set counter
+            proc    oled_fill_buffer
+            push    rf                ; save buffer ptr            
+            push    rc                ; save counter
+
+            load    rf, oled_display_buffer
+            load    rc, BUFFER_SIZE   ; set counter
              
-cb_loop:    ldi     0
+fb_loop:    ldi     $FF
             str     rf
             inc     rf
             dec     rc
-            LBRNZ   rc, cb_loop
+            lbrnz   rc, fb_loop
 
-            POP     rc
-            POP     rf
+            pop     rc
+            pop     rf
             
-            CLC               ; make sure DF = 0            
-            RETURN
+            clc                       ; make sure DF = 0            
+            return
 
             endp

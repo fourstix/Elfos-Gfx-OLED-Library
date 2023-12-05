@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------------------------
-; gfx_oled - a library for basic graphics functions useful 
+; oled_spi - a library for basic graphics functions useful 
 ; for an oled display connected to the 1802-Mini computer via 
 ; the SPI Expansion Board.  These routines operate on pixels
 ; in a buffer used by the display.
@@ -18,10 +18,9 @@
 ; SPI Expansion Board for the 1802/Mini Computer hardware
 ; Copyright 2022 by Tony Hefner 
 ;-------------------------------------------------------------------------------
-#include    include/ops.inc
-#include    include/gfx_display.inc
-
-            extrn   gfx_display_ptr  
+#include    ../include/ops.inc
+#include    ../include/gfx_display.inc
+#include    ../include/oled_spi_def.inc
 
 ;-------------------------------------------------------
 ; Private routine - called only by the public routines
@@ -30,7 +29,7 @@
 ;-------------------------------------------------------
 
 ;-------------------------------------------------------
-; Name: gfx_write_v_line
+; Name: oled_fast_v_line
 ;
 ; Draw a vertical line starting at position x,y.
 ;
@@ -39,14 +38,14 @@
 ;             r9.1 - color 
 ;             r9.0 - length 
 ;                  
-; Return: (None) r7, r8, r9 - consumed
+; Return: (None) r8, r9.0 - consumed
 ;-------------------------------------------------------
-            proc   gfx_write_v_line
+            proc   oled_fast_v_line
 
-            PUSH   ra               ; save scratch register
-            PUSH   rb               ; save look up register
-            PUSH   rc               ; save counter
-            PUSH   rd               ; save buffer pointer
+            push   rd               ; save buffer pointer
+            push   rc               ; save counter
+            push   rb               ; save look up register
+            push   r8               ; save scratch register
 
             ;-------------------------------------------------------
             ;  rd - points to byte in buffer
@@ -61,11 +60,11 @@
             ;  r7.0 - origin x
             ;-------------------------------------------------------
             
-            glo    r9               ; check length counter
-            lbz    fwv_done         ; if no length, no line to draw
-            
+            ; increase length to always draw at least one pixel
+            inc    r9                 
+          
             ;---- get ptr to byte in buffer
-            CALL   gfx_display_ptr  ; rd now points to byte in buffer
+            call   oled_display_ptr ; rd now points to byte in buffer
             
             ;---- calculate bit offset = y0 & 7
             ghi    r7               
@@ -80,7 +79,7 @@
             ; write bits in partial first byte
             ;-------------------------------------------------------            
                         
-            LOAD   rb, premask      ; set lookup ptr to premask
+            load   rb, premask      ; set lookup ptr to premask
             glo    r8               ; get mod value
             str    r2               ; save in M(X)
             glo    rb               ; get look up ptr
@@ -155,7 +154,7 @@ fwv_draw:   glo    r8               ; adjust h by mod value
             ; write entire bytes at a time
             ;-------------------------------------------------------            
 
-next_byte:  ADD16  rd, 128          ; advance buffer ptr to next line
+next_byte:  add16  rd, 128          ; advance buffer ptr to next line
 fwv_byte:   glo    r9               ; get h
             smi     8               ; subtract 8
             lbnf   fwv_last         ; if h < 8, do last byte
@@ -182,7 +181,7 @@ fwv_last:   glo    r9               ; do the last partial byte
             lbz    fwv_done         ; h = 0, ends on byte boundary, we're done
             ani    7                ; h&7 is last mod value
             plo    r8               ; save mod value
-            LOAD   rb, postmask     ; set rb to lookup table
+            load   rb, postmask     ; set rb to lookup table
             glo    r8               ; get mod value
             str    r2               ; save mod value in M(X)
             glo    rb               ; add mod value to lookup ptr
@@ -224,11 +223,12 @@ inv_mask2:  ghi    r8               ; get postmask
             xor                     ; xor to invert selected bits
             str    rd               ; put back in buffer            
             
-fwv_done:   POP    rd               ; restore registers
-            POP    rc
-            POP    rb
-            POP    ra  
-            RETURN
+fwv_done:   pop    r8               ; restore registers
+            pop    rb
+            pop    rc
+            pop    rd  
+            clc                     ; make sure error flag is cleared
+            return
 
             ;---- look up tables for partial first and last bytes
 premask:  db $00, $80, $C0, $E0, $F0, $F8, $FC, $FE 

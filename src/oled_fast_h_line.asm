@@ -1,9 +1,8 @@
 ;-------------------------------------------------------------------------------
-; gfx_oled - a library for basic graphics functions useful 
+; oled_spi - a library for basic graphics functions useful 
 ; for an oled display connected to the 1802-Mini computer via 
 ; the SPI Expansion Board.  These routines operate on pixels
 ; in a buffer used by the display.
-;
 ;
 ; Copyright 2023 by Gaston Williams
 ;
@@ -18,10 +17,9 @@
 ; SPI Expansion Board for the 1802/Mini Computer hardware
 ; Copyright 2022 by Tony Hefner 
 ;-------------------------------------------------------------------------------
-#include    include/ops.inc
-#include    include/gfx_display.inc
-
-            extrn   gfx_display_ptr  
+#include    ../include/ops.inc
+#include    ../include/gfx_display.inc
+#include    ../include/oled_spi_def.inc
 
 ;-------------------------------------------------------
 ; Private routine - called only by the public routines
@@ -30,25 +28,25 @@
 ;-------------------------------------------------------
 
 ;-------------------------------------------------------
-; Name: gfx_write_h_line
+; Name: oled_fast_h_line
 ;
 ; Draw a horizontal line starting at position x,y.
 ; Uses logic instead of calling write pixel.
 ;
-; Parameters: rf   - ptr to display buffer
-;             r7.1 - origin y 
-;             r7.0 - origin x 
-;             r9.1 - color 
-;             r9.0 - length  (0 to 127)   
+; Parameters: 
+;   r7.1 - origin y 
+;   r7.0 - origin x 
+;   r9.1 - color 
+;   r9.0 - length  (0 to 127)   
 ;                  
-; Return: (None) r7, r9 - consumed
+; Return: (None) r9.0 - consumed
 ;-------------------------------------------------------
-            proc    gfx_write_h_line
+            proc    oled_fast_h_line
             
-            PUSH    rd                ; save position register 
-            PUSH    rc                ; save bit mask register
+            push    rd                ; save position register 
+            push    rc                ; save bit mask register
             
-            CALL    gfx_display_ptr   ; point rd to byte in buffer
+            call    oled_display_ptr  ; point rd to byte in buffer
 
             ldi     $01               ; bit mask for vertical pixie byte
             phi     rc                ; store bit mask in rc.1
@@ -97,8 +95,8 @@ wfh_chk:    glo     r9                ; check length count
             dec     r9                ; draw length of w pixels
             lbr     wfh_loop            
 
-wh_done:    POP     rc
-            POP     rd
-            RETURN
+wh_done:    pop     rc
+            pop     rd
+            return
 
             endp

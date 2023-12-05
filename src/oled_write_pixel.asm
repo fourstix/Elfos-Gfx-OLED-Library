@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------------------------
-; gfx_oled - a library for basic graphics functions useful 
+; oled_spi - a library for basic graphics functions useful 
 ; for an oled display connected to the 1802-Mini computer via 
 ; the SPI Expansion Board.  These routines operate on pixels
 ; in a buffer used by the display.
@@ -18,11 +18,10 @@
 ; SPI Expansion Board for the 1802/Mini Computer hardware
 ; Copyright 2022 by Tony Hefner 
 ;-------------------------------------------------------------------------------
-#include    include/ops.inc
-#include    include/gfx_display.inc
+#include    ../include/ops.inc
+#include    ../include/gfx_display.inc
+#include    ../include/oled_spi_def.inc
             
-            extrn   gfx_display_ptr
-
 ;-------------------------------------------------------
 ; Private routine - called only by the public routines
 ; These routines may *not* validate or clip. They may 
@@ -30,21 +29,26 @@
 ;-------------------------------------------------------
 
 ;-------------------------------------------------------
-; Name: gfx_write_pixel
+; Name: oled_write_pixel
 ;
 ; Set a pixel in the display buffer at position x,y.
 ;
-; Parameters: rf   - pointer to display buffer.
-;             r7.1 - y (line, 0 to 63)
-;             r7.0 - x (pixel offset, 0 to 127)
-;             r9.1 - color (GFX_SET, GFX_CLEAR, GFX_INVERT)
-;                   
-; Return: DF = 1 if error, 0 if no error
+; Parameters: 
+;  r7.1 - y (line, 0 to 63)
+;  r7.0 - x (pixel offset, 0 to 127)
+;  r9.1 - color (GFX_SET, GFX_CLEAR, GFX_INVERT)
+; Registers Used: 
+;  rd - pointer to byte in buffer
+;  rc.1 - bit mask            
+;  rc.0 - bit counter                  
+; 
+; Returns: DF = 1 if error, 0 if no error
 ;-------------------------------------------------------
-            proc    gfx_write_pixel
-            PUSH    rd                ; save position register 
-            PUSH    rc                ; save bit mask register
-            CALL    gfx_display_ptr   ; point rd to byte in buffer
+            proc    oled_write_pixel
+            push    rd                ; save position register 
+            push    rc                ; save bit mask register
+
+            call    oled_display_ptr  ; point rd to byte in buffer
 
             ldi     $01               ; bit mask for vertical pixie byte
             phi     rc                ; store bit mask in rc.1
@@ -81,9 +85,10 @@ flip_bit:   ldn     rd                ; get byte from buffer
             xor                       ; XOR mask to invert bit
             str     rd                ; put updated byte back in buffer
 
-wp_done:    POP     rc                ; restore bit register 
-            POP     rd                ; restore position register
-            CLC                       ; Set no error
-            RETURN
+wp_done:    pop     rc                ; restore bit register 
+            pop     rd                ; restore position register
+
+            clc                       ; Set no error
+            return
 
             endp 
