@@ -1,9 +1,13 @@
-# Elfos-Gfx-OLED-Library
-An implementation of the [GFX-1802-Library](https://github.com/fourstix/Elfos-Gfx-OLED-Library) display interface in graphics device library for an OLED display using the [Elf/OS SPI OLED](https://github.com/fourstix/Elfos-SPI-OLED-Drivers) video driver connected to an Elf/OS system, such as the 1802/Mini with an SPI adapter board.
+# OBSOLETE
+The code in this repository was merged into the [Elf/OS SPI OLED](https://github.com/fourstix/Elfos-SPI-OLED-Drivers) and is now maintained there. This repository was archived.  The latest version of this code is available at [Elf/OS SPI OLED](https://github.com/fourstix/Elfos-SPI-OLED-Drivers).
+ 
+Elfos-Gfx-OLED-Library
+----------------------
+An implementation of the [GFX-1802-Library](https://github.com/fourstix/GFX-1802-Library) display interface in graphics device library for an OLED display using the [Elf/OS SPI OLED](https://github.com/fourstix/Elfos-SPI-OLED-Drivers) video driver connected to an Elf/OS system, such as the 1802/Mini with an SPI adapter board.
 
 Introduction
 ------------
-This repository contains 1802 Assembler code for an OLED graphics library that implements the GFX Display Interface from the [GFX-1802-Library](https://github.com/fourstix/Elfos-Gfx-OLED-Library) based on Adafruit's [Adafruit_GFX-Library](https://github.com/adafruit/Adafruit-GFX-Library) written by Ladyada Limor Fried. 
+This repository contains 1802 Assembler code for an OLED graphics library that implements the GFX Display Interface from the [GFX-1802-Library](https://github.com/fourstix/GFX-1802-Library) based on Adafruit's [Adafruit_GFX-Library](https://github.com/adafruit/Adafruit-GFX-Library) written by Ladyada Limor Fried. 
 
 Platform  
 --------
