@@ -1,5 +1,5 @@
 # OBSOLETE
-The code in this repository was merged into the [Elf/OS SPI OLED](https://github.com/fourstix/Elfos-SPI-OLED-Drivers) and is now maintained there. This repository was archived.  The latest version of this code is available at [Elf/OS SPI OLED](https://github.com/fourstix/Elfos-SPI-OLED-Drivers).
+The code in this repository was merged into the [Elf/OS SPI OLED Drivers](https://github.com/fourstix/Elfos-SPI-OLED-Drivers) repository and is now maintained there. This repository was archived.  The latest version of this code is available at [Elf/OS SPI OLED Drivers](https://github.com/fourstix/Elfos-SPI-OLED-Drivers).
  
 Elfos-Gfx-OLED-Library
 ----------------------
